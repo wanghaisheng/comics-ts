@@ -1,0 +1,80 @@
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+}
+
+.heading {
+    font-size: 1.3rem;
+    background-color: black;
+    color: white;
+    margin: 0px;
+    padding: 0.5em;
+    text-align: center;
+}
+
+#loading {
+    text-align: center;
+    padding: 2em;
+}
+
+progress {
+    height: 1em;
+}
+
+article {
+    margin: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 5px;
+    text-align: center;
+}
+
+article p {
+    overflow-x: auto;
+}
+
+article h2 {
+    margin-top: 0px;
+    padding: 0.3em;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-radius: 5px 5px 0px 0px;
+    font-weight: 400;
+}
+
+article.error {
+    border: 1px solid rgba(255, 0, 0, .25);
+    background-color: rgba(255, 0, 0, 0.125);
+}
+
+article.error h2 {
+    background-color: rgba(255, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255,0,0,.25);
+}
+
+article a {
+    color: black;
+    text-decoration: none;
+}
+
+img {
+	max-width: 100%;
+	transition: max-width 0.5s;
+}
+
+img.zoomed {
+	max-width: 200%;
+	transition: max-width 0.5s;
+}
+
+@media (min-width: 38em)
+{
+    article {
+        max-width: 800px;
+    }
+}
+
