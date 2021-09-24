@@ -4,7 +4,7 @@ zone_id = ""
 account_id = ""
 route = ""
 workers_dev = true
-routes = ['comics2.wangpedersen.com/*']
+routes = ['comics.wangpedersen.com/*']
 
 [site]
 bucket = "./dist/public"

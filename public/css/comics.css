@@ -35,6 +35,8 @@ article {
 
 article p {
     overflow-x: auto;
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
 article h2 {

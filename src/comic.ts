@@ -105,7 +105,7 @@ export class LoadedUrlComic extends ComicDefinition {
   }
 
   async loadComicData(): Promise<ComicData> {
-    const response = await fetch(this.linkUrl)
+    const response = await this.fetchWithTimeout(this.linkUrl)
 
     if (response.status != 200) {
       throw new Error(`Failed getting ${this.name}: 'HTTP ${response.status}`)
@@ -113,6 +113,20 @@ export class LoadedUrlComic extends ComicDefinition {
     let body = await response.text()
 
     return this.comicFactory(body)
+  }
+  
+  async fetchWithTimeout(input: RequestInfo, init?: RequestInit): Promise<Response>
+  {
+    const timeout = 2000;
+
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    const response = await fetch(input, {
+      ...init,
+      signal: controller.signal  
+    });
+    clearTimeout(id);
+    return response;
   }
 }
 
