@@ -5,11 +5,14 @@ type Comic = {
     firstSeen: number | null
 }
 
+type ComicMedia = {
+    href?: string,
+    content?: string,
+    type: string
+}
+
 type ComicData = {
-    img?: string
-    img2?: string
-    imgclass?: string
-    title?: string
+    media: ComicMedia[]
     errors?: string[]
 }
 
@@ -25,7 +28,7 @@ window.addEventListener('load', async function () {
         comics.sort((a, b) => b.firstSeen - a.firstSeen)
         comics.forEach((comic) => {
             if (comic.data.errors && comic.data.errors.length > 0) {
-                emitError(comic.name, comic.data.errors.join('\n'))
+                emitError(comic.name, comic.data.errors.join('\n'), comic.linkUrl)
                 return
             }
             const comicElement = document.createElement('article')
@@ -36,28 +39,32 @@ window.addEventListener('load', async function () {
             head.appendChild(link);
             comicElement.appendChild(head);
 
-            if (comic.data.img) {
-                const p = document.createElement('p');
-                const img = document.createElement('img');
-                img.setAttribute('src', comic.data.img);
-                p.appendChild(img);
-                comicElement.appendChild(p);
-            }
+            for (var media of comic.data.media) {
+                if (media.type == 'image') {
+                    const p = document.createElement('p');
+                    const img = document.createElement('img');
+                    img.setAttribute('src', media.href);
+                    p.appendChild(img);
+                    comicElement.appendChild(p);
+                }
+    
+                if (media.type == 'text') {
+                    let p = document.createElement('p');
+                    p.innerText = media.content;
+                    comicElement.appendChild(p);
+                }    
 
-            if (comic.data.img2) {
-                const p = document.createElement('p');
-                const img = document.createElement('img');
-                img.setAttribute('src', comic.data.img2);
-                p.appendChild(img);
-                comicElement.appendChild(p);
+                if (media.type == 'youtube') {
+                    let iframe = document.createElement('iframe');
+                    iframe.width = "100%";
+                    iframe.height = "360";
+                    iframe.allowFullscreen = true;
+                    iframe.allow = "encrypted-media";
+                    iframe.title = comic.name;
+                    iframe.src = media.href.replace("www.youtube.com", "www.youtube-nocookie.com");
+                    comicElement.appendChild(iframe);
+                }
             }
-
-            if (comic.data.title) {
-                let p = document.createElement('p');
-                p.innerText = comic.data.title;
-                comicElement.appendChild(p);
-            }
-
             for (var image of comicElement.getElementsByTagName('img')) {
                 image.addEventListener('click', toggleZoom)
             }
@@ -73,10 +80,23 @@ function hideLoad() {
     document.getElementById('loading').style.display = 'none'
 }
 
-function emitError(heading: string, content: string) {
+function emitError(heading: string, content: string, link?: string) {
     let error = document.createElement('article')
     error.className = 'error'
-    error.innerHTML = `<h2>${heading}</h2><p>${content}</p>`
+    let h2 = document.createElement('h2');
+    if(link) {
+        let a = document.createElement('a');
+        a.href = link;
+        a.innerText = heading;
+        h2.appendChild(a);
+    }
+    else {
+        h2.innerText = heading;
+    }
+    error.appendChild(h2);
+    let p = document.createElement('p');
+    p.innerText = content;
+    error.appendChild(p);
     document.body.appendChild(error)
 }
 
@@ -85,16 +105,12 @@ function toggleZoom(event: MouseEvent) {
 }
 
 function updateLocalComicsTimestamp(comics: Array<Comic>) {
-    function key(comic: Comic) {
-        return (comic.data.img ?? '') + (comic.data.img2 ?? '')
-    }
-
     let currentComicsTimestamps = JSON.parse(
         localStorage.getItem('comicTimestamps') ?? '{}',
     )
     let newComicsTimestamps = {}
     comics.forEach((comic) => {
-        let key = (comic.data.img ?? '') + (comic.data.img2 ?? '')
+        let key = JSON.stringify(comic.data.media);
         comic.firstSeen = currentComicsTimestamps[key] ?? Date.now()
         newComicsTimestamps[key] = comic.firstSeen
     })

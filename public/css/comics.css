@@ -80,3 +80,7 @@ img.zoomed {
     }
 }
 
+iframe {
+    border: 0;
+}
+

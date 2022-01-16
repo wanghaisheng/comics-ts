@@ -6,12 +6,17 @@ export type Comic = {
   data: ComicData
 }
 
+export type ComicMedia = {
+  href?: string,
+  content?: string,
+  type: string
+}
+
 export type ComicData = {
-  img?: string
-  img2?: string
-  title?: string
+  media: ComicMedia[]
   errors?: string[]
 }
+
 
 function fixUrl(originUrl: string, url?: string): string | undefined {
   if (!url) return url
@@ -26,17 +31,28 @@ function fixUrl(originUrl: string, url?: string): string | undefined {
 
 function fixUrls(originUrl: string, cd: ComicData): ComicData {
   return {
-    ...cd,
-    img: fixUrl(originUrl, cd.img)!,
-    img2: fixUrl(originUrl, cd.img2),
+    errors: cd.errors,
+    media: cd.media.map(m => {
+      return {
+        ...m,
+        href: fixUrl(originUrl, m.href)
+      }
+    })
   }
 }
 
 function validate(comicData: ComicData) {
+  if(!comicData.media)
+  {
+    comicData.media = []
+  }
+
+  comicData.media = comicData.media.filter(m => (m.href || m.content))
+  
   if (!comicData.errors) {
     comicData.errors = []
   }
-  if (!comicData.img) {
+  if (comicData.media.length == 0) {
     comicData.errors.push('Could not load comic')
   }
 }
@@ -66,6 +82,7 @@ export abstract class ComicDefinition {
         name: this.name,
         linkUrl: this.linkUrl,
         data: {
+          media: [],
           errors: [e.toString()],
         },
       }
@@ -89,7 +106,10 @@ export class DirectUrlComic extends ComicDefinition {
 
   loadComicData(): Promise<ComicData> {
     return Promise.resolve({
-      img: this.imgFactory(),
+      media: [{
+        href: this.imgFactory(),
+        type: 'image'
+      }]
     })
   }
 }
@@ -130,13 +150,25 @@ export class LoadedUrlComic extends ComicDefinition {
   }
 }
 
-export type ParseComicFactory = (body: CheerioAPI) => ComicData
+export type ParseComicFactory = (body: CheerioAPI, bodyText: string) => ComicData
 
 export class ParseComic extends LoadedUrlComic {
   constructor(name: string, url: string, comicFactory: ParseComicFactory) {
     super(name, url, (body) => {
-      let doc = load(body)
-      return comicFactory(doc)
+      let doc = load(body, {xmlMode: false})
+      return comicFactory(doc, body)
     })
   }
+}
+
+export function singleImage(href: string | undefined):  ComicData {
+  return {
+    media: [{type: 'image', href: href}]
+  };
+}
+
+export function singleImageWithTitle(href: string | undefined, title: string | undefined):  ComicData {
+  return {
+    media: [{type: 'image', href: href}, {type: 'text', content: title}]
+  };
 }
