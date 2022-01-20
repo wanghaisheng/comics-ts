@@ -11,10 +11,13 @@ export var comicDefinitions: ComicDefinition[] = [
       $('#comic img').attr('title')
     );
   }),
-  new ParseComic('Dilbert (English)', 'http://dilbert.com/', ($) => {
+  new ParseComic('Dilbert (English)', 'https://dilbert.com/', ($) => {
     return singleImage($('img.img-comic').attr('src'));
   }),
-  new ParseComic('Spinnerette', 'http://www.spinnyverse.com', ($) => {
+  new ParseComic('Spinnerette', 'https://www.spinnyverse.com', ($) => {
+    return singleImage($('img#cc-comic').attr('src'));
+  }),
+  new ParseComic('Cassiopeia Quinn', 'https://www.cassiopeiaquinn.com/', ($) => {
     return singleImage($('img#cc-comic').attr('src'));
   }),
   new ParseComic('Ctrl-Alt-Del', 'https://cad-comic.com/', ($) => {
@@ -37,7 +40,7 @@ export var comicDefinitions: ComicDefinition[] = [
       let vidMatch = body.match(/videoId: *"([^"]*)"/)
       if (vidMatch) {
         return {
-          media: [{type: 'youtube', href: "https://www.youtube-nocookie.com/embed/" + vidMatch[1]}]
+          media: [{type: 'youtube', id: vidMatch[1]}]
         }
       }
     }

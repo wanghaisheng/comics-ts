@@ -6,6 +6,7 @@ type Comic = {
 }
 
 type ComicMedia = {
+    id?: string,
     href?: string,
     content?: string,
     type: string
@@ -61,7 +62,7 @@ window.addEventListener('load', async function () {
                     iframe.allowFullscreen = true;
                     iframe.allow = "encrypted-media";
                     iframe.title = comic.name;
-                    iframe.src = media.href.replace("www.youtube.com", "www.youtube-nocookie.com");
+                    iframe.src = "https://www.youtube-nocookie.com/embed/" + media.id;
                     comicElement.appendChild(iframe);
                 }
             }

@@ -63,6 +63,10 @@ article a {
     text-decoration: none;
 }
 
+article a:hover,article a:focus {
+    text-decoration: underline;
+}
+
 img {
 	max-width: 100%;
 	transition: max-width 0.5s;

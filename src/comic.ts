@@ -7,6 +7,7 @@ export type Comic = {
 }
 
 export type ComicMedia = {
+  id?: string,
   href?: string,
   content?: string,
   type: string
@@ -47,7 +48,7 @@ function validate(comicData: ComicData) {
     comicData.media = []
   }
 
-  comicData.media = comicData.media.filter(m => (m.href || m.content))
+  comicData.media = comicData.media.filter(m => (m.href || m.content || m.id))
   
   if (!comicData.errors) {
     comicData.errors = []
