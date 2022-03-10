@@ -1,5 +1,6 @@
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack');
 
 let outputs = {
   worker: 'worker.js',
@@ -9,6 +10,11 @@ let outputs = {
 let SRC_PATH = path.join(__dirname, './src')
 let TEST_PATH = path.join(__dirname, './test')
 let CLIENT_PATH = path.join(__dirname, './client')
+
+let COMMIT_HASH = require('child_process')
+  .execSync('git rev-parse --short HEAD')
+  .toString()
+  .trim();
 
 module.exports = {
   entry: {
@@ -48,5 +54,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: 'public', to: 'public' }],
     }),
+    new webpack.DefinePlugin({
+      __COMMIT_HASH__: JSON.stringify(COMMIT_HASH)
+    })
   ],
 }

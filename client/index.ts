@@ -1,3 +1,5 @@
+declare const __COMMIT_HASH__: string
+
 type Comic = {
     name: string
     linkUrl: string
@@ -19,6 +21,8 @@ type ComicData = {
 
 window.addEventListener('load', async function () {
     try {
+        setVersion()
+
         let comicsResponse = await fetch('/comics')
         hideLoad()
         if (comicsResponse.status != 200) {
@@ -69,7 +73,7 @@ window.addEventListener('load', async function () {
             for (var image of comicElement.getElementsByTagName('img')) {
                 image.addEventListener('click', toggleZoom)
             }
-            document.body.appendChild(comicElement)
+            document.getElementById('comics').appendChild(comicElement)
         })
     } catch (e) {
         hideLoad()
@@ -117,4 +121,9 @@ function updateLocalComicsTimestamp(comics: Array<Comic>) {
     })
 
     localStorage.setItem('comicTimestamps', JSON.stringify(newComicsTimestamps))
+}
+
+function setVersion()
+{
+    document.getElementById("version").innerText = __COMMIT_HASH__;
 }

@@ -88,3 +88,8 @@ iframe {
     border: 0;
 }
 
+#version {
+    margin: 1em;
+    text-align: center;
+    color: #aaa;
+}
