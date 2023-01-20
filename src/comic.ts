@@ -41,6 +41,13 @@ function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
     return $(this).attr('src', fixUrl(originUrl, src))
   });
 
+  $('img[srcset^="/"]').replaceWith(function() {
+    const src: string | undefined = $(this).attr('src')
+    if (!src) return $(this)
+
+    return $(this).attr('src', fixUrl(originUrl, src))
+  });
+
   return $.html();
 }
 
