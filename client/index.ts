@@ -57,7 +57,13 @@ window.addEventListener('load', async function () {
                     let p = document.createElement('p');
                     p.innerText = media.content;
                     comicElement.appendChild(p);
-                }    
+                }
+                
+                if (media.type == 'html') {
+                    let p = document.createElement('p');
+                    p.innerHTML = media.content;
+                    comicElement.appendChild(p);
+                }
 
                 if (media.type == 'youtube') {
                     let iframe = document.createElement('iframe');
