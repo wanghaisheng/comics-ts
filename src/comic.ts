@@ -36,12 +36,12 @@ function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
   let parsedOrigin = new URL(originUrl)
 
   const $ = load(html)
-  $('img[src^="/"]').replaceWith(function() {
+  return $('img[src^="/"]').replaceWith(function() {
     const src: string | undefined = $(this).attr('src')
     if (!src) return $(this)
 
     return $(this).attr('src', fixUrl(originUrl, src))
-  })
+  }).html() ?? undefined
 }
 
 function fixUrls(originUrl: string, cd: ComicData): ComicData {
