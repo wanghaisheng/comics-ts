@@ -49,8 +49,8 @@ export var comicDefinitions: ComicDefinition[] = [
   new ParseComic('Loading Artist', 'https://loadingartist.com/comic/ready-or-naut/', ($) => {
     return {
       media: [
-        {type: 'image', href: $('div.main-image-content img').attr('src')},
-        {type: 'text', content: $('div.main-image-content img').attr('title')},
+        {type: 'image', href: $('div.main-image-container img').attr('src')},
+        {type: 'text', content: $('div.main-image-container img').attr('title')},
         {type: 'html', content: $('div.comic-post article div.body').html() ?? undefined},
       ]
     }
