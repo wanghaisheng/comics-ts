@@ -33,15 +33,15 @@ function fixUrl(originUrl: string, url?: string): string | undefined {
 function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
   if (!html) return html;
 
-  let parsedOrigin = new URL(originUrl)
-
   const $ = load(html)
-  return $('img[src^="/"]').replaceWith(function() {
+  $('img[src^="/"]').replaceWith(function() {
     const src: string | undefined = $(this).attr('src')
     if (!src) return $(this)
 
     return $(this).attr('src', fixUrl(originUrl, src))
-  }).html() ?? undefined
+  });
+
+  return $.html();
 }
 
 function fixUrls(originUrl: string, cd: ComicData): ComicData {
