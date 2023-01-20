@@ -30,13 +30,28 @@ function fixUrl(originUrl: string, url?: string): string | undefined {
   return new URL(url, originUrl).href
 }
 
+function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
+  if (!html) return html;
+
+  let parsedOrigin = new URL(originUrl)
+
+  const $ = load(html)
+  $('img[src^="/"]').replaceWith(function() {
+    const src: string | undefined = $(this).attr('src')
+    if (!src) return $(this)
+
+    return $(this).attr('src', fixUrl(originUrl, src))
+  })
+}
+
 function fixUrls(originUrl: string, cd: ComicData): ComicData {
   return {
     errors: cd.errors,
     media: cd.media.map(m => {
       return {
         ...m,
-        href: fixUrl(originUrl, m.href)
+        href: fixUrl(originUrl, m.href),
+        content: m.type == 'html' ? fixHtmlUrls(originUrl, m.content) : m.content
       }
     })
   }
