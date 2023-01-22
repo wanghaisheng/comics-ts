@@ -52,7 +52,7 @@ function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
 function fixSrcSet(originUrl: string, srcSet: string): string {
   return srcSet.split(",").map(sc => {
     const urlAndSizes = sc.split(" ");
-    urlAndSizes[0] = fixUrl(originUrl, urlAndSizes[0]) as string;
+    urlAndSizes[0] = fixUrl(originUrl, urlAndSizes[0].trim()) as string;
     return urlAndSizes.join(" ");
   }).join(",");
 }
