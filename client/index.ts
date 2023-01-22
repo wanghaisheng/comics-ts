@@ -1,3 +1,5 @@
+import * as DOMPurify from 'isomorphic-dompurify';
+
 declare const __COMMIT_HASH__: string
 
 type Comic = {
@@ -61,7 +63,7 @@ window.addEventListener('load', async function () {
                 
                 if (media.type == 'html') {
                     let p = document.createElement('p');
-                    p.innerHTML = media.content;
+                    p.innerHTML = DOMPurify.sanitize(media.content);
                     comicElement.appendChild(p);
                 }
 
