@@ -1,4 +1,4 @@
-import * as DOMPurify from 'isomorphic-dompurify';
+import * as DOMPurify from 'dompurify';
 
 declare const __COMMIT_HASH__: string
 
