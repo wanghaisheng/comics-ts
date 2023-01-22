@@ -33,26 +33,17 @@ function fixUrl(originUrl: string, url?: string): string | undefined {
 function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
   if (!html) return html;
 
-  const $ = load(html)
-  $('img').replaceWith(function() {
-    const src: string | undefined = $(this).attr('src')
-    $(this).attr('src', fixUrl(originUrl, src))
-
-    const srcSet: string | undefined = $(this).attr('srcset');
-    if(srcSet) {
-      $(this).attr('srcset', fixSrcSet(originUrl, srcSet));
-    }
-
-    return $(this);
-  });
+  const $ = load(html, {xmlMode: false}, false)
+  $('img').attr('src', (_, src) => fixUrl(originUrl, src) as string);
+  $('img[srcset]').attr('srcset', (_, srcset) => fixSrcSet(originUrl, srcset));
 
   return $.html();
 }
 
 function fixSrcSet(originUrl: string, srcSet: string): string {
   return srcSet.split(",").map(sc => {
-    const urlAndSizes = sc.split(" ");
-    urlAndSizes[0] = fixUrl(originUrl, urlAndSizes[0].trim()) as string;
+    const urlAndSizes = sc.split(" ").filter(s => s);
+    urlAndSizes[0] = fixUrl(originUrl, urlAndSizes[0]) as string;
     return urlAndSizes.join(" ");
   }).join(",");
 }
@@ -170,12 +161,16 @@ export class LoadedUrlComic extends ComicDefinition {
 
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
-    const response = await fetch(input, {
-      ...init,
-      signal: controller.signal  
-    });
-    clearTimeout(id);
-    return response;
+    try {
+      const response = await fetch(input, {
+        ...init,
+        signal: controller.signal  
+      });  
+      return response;
+    }
+    finally {
+      clearTimeout(id);
+    }
   }
 }
 
@@ -200,4 +195,11 @@ export function singleImageWithTitle(href: string | undefined, title: string | u
   return {
     media: [{type: 'image', href: href}, {type: 'text', content: title}]
   };
+}
+
+// These functions are internal, and are only exported for unit testing
+export let exportedForTesting = {
+  fixSrcSet: fixSrcSet,
+  fixUrls: fixUrls,
+  fixHtmlUrls: fixHtmlUrls
 }
