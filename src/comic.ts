@@ -40,14 +40,21 @@ function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
 
     const srcSet: string | undefined = $(this).attr('srcset');
     if(srcSet) {
-      $(this).attr('srcset', 
-        srcSet.split(",").map(sc => fixUrl(originUrl, sc)).join(","));
+      $(this).attr('srcset', fixSrcSet(originUrl, srcSet));
     }
 
     return $(this);
   });
 
   return $.html();
+}
+
+function fixSrcSet(originUrl: string, srcSet: string): string {
+  return srcSet.split(",").map(sc => {
+    const urlAndSizes = sc.split(" ");
+    urlAndSizes[0] = fixUrl(originUrl, urlAndSizes[0]) as string;
+    return urlAndSizes.join(" ");
+  }).join(",");
 }
 
 function fixUrls(originUrl: string, cd: ComicData): ComicData {
