@@ -1,9 +1,4 @@
 import { CheerioAPI, load } from 'cheerio'
-import DOMPurify from 'dompurify';
-import { JSDOM } from 'jsdom';
-
-const window = new JSDOM('').window as unknown as Window;
-const purify = DOMPurify(window);
 
 export type Comic = {
   name: string
@@ -184,9 +179,8 @@ export type ParseComicFactory = (body: CheerioAPI, bodyText: string) => ComicDat
 export class ParseComic extends LoadedUrlComic {
   constructor(name: string, url: string, comicFactory: ParseComicFactory) {
     super(name, url, (body) => {
-      let cleanBody = purify.sanitize(body)   
-      let doc = load(cleanBody, {xmlMode: false, scriptingEnabled: false})
-      return comicFactory(doc, cleanBody)
+      let doc = load(body, {xmlMode: false, scriptingEnabled: false})
+      return comicFactory(doc, body)
     })
   }
 }
