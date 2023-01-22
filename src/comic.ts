@@ -1,5 +1,4 @@
 import { CheerioAPI, load } from 'cheerio'
-import { attr } from 'cheerio/lib/api/attributes'
 
 export type Comic = {
   name: string
@@ -35,16 +34,19 @@ function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
   if (!html) return html;
 
   const $ = load(html)
+  $('img').replaceWith(function() {
+    const src: string | undefined = $(this).attr('src')
+    $(this).attr('src', fixUrl(originUrl, src))
 
-  for (const attrName in ['src', 'srcset']) {
-    $(`img[${attrName}^="/"]`).replaceWith(function() {
-      const attrval: string | undefined = $(this).attr(attrName)
-      if (!attrval) return $(this)
-  
-      return $(this).attr(attrName, fixUrl(originUrl, attrval))
-    });
-  }
-    
+    const srcSet: string | undefined = $(this).attr('srcset');
+    if(srcSet) {
+      $(this).attr('srcset', 
+        srcSet.split(",").map(sc => fixUrl(originUrl, src)).join(","));
+    }
+
+    return $(this);
+  });
+
   return $.html();
 }
 
