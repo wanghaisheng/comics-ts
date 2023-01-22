@@ -1,4 +1,5 @@
 import { CheerioAPI, load } from 'cheerio'
+import DOMPurify from 'isomorphic-dompurify';
 
 export type Comic = {
   name: string
@@ -179,8 +180,9 @@ export type ParseComicFactory = (body: CheerioAPI, bodyText: string) => ComicDat
 export class ParseComic extends LoadedUrlComic {
   constructor(name: string, url: string, comicFactory: ParseComicFactory) {
     super(name, url, (body) => {
-      let doc = load(body, {xmlMode: false})
-      return comicFactory(doc, body)
+      let cleanBody = DOMPurify.sanitize(body)   
+      let doc = load(cleanBody, {xmlMode: false, scriptingEnabled: false})
+      return comicFactory(doc, cleanBody)
     })
   }
 }
