@@ -1,7 +1,8 @@
 import { handleComicsRequest } from './comics_endpoint'
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
 
-addEventListener('fetch', (event) => {
+addEventListener('fetch', (evt) => {
+  const event = evt as FetchEvent
   const pathname = new URL(event.request.url).pathname
   if (pathname == '/comics') {
     event.respondWith(handleComicsRequest(event.request))
