@@ -1,4 +1,5 @@
 import { CheerioAPI, load } from 'cheerio'
+import xss, { whiteList } from 'xss'
 
 export type Comic = {
   name: string
@@ -30,14 +31,23 @@ function fixUrl(originUrl: string, url?: string): string | undefined {
   return new URL(url, originUrl).href
 }
 
-function fixHtmlUrls(originUrl: string, html?: string): string | undefined {
+function fixupHtml(originUrl: string, html?: string): string | undefined {
   if (!html) return html;
 
-  const $ = load(html, {xmlMode: false}, false)
+  const $ = load(sanitize(html), {xmlMode: false}, false)
   $('img').attr('src', (_, src) => fixUrl(originUrl, src) as string);
   $('img[srcset]').attr('srcset', (_, srcset) => fixSrcSet(originUrl, srcset));
 
   return $.html();
+}
+
+function sanitize(html: string): string {
+  return xss(html, {
+    allowList: {
+      ...whiteList,
+      img: ["src", "srcset", "alt", "title", "width", "height"]
+    }
+  })
 }
 
 function fixSrcSet(originUrl: string, srcSet: string): string {
@@ -48,14 +58,14 @@ function fixSrcSet(originUrl: string, srcSet: string): string {
   }).join(",");
 }
 
-function fixUrls(originUrl: string, cd: ComicData): ComicData {
+function fixup(originUrl: string, cd: ComicData): ComicData {
   return {
     errors: cd.errors,
     media: cd.media.map(m => {
       return {
         ...m,
         href: fixUrl(originUrl, m.href),
-        content: m.type == 'html' ? fixHtmlUrls(originUrl, m.content) : m.content
+        content: m.type == 'html' ? fixupHtml(originUrl, m.content) : m.content
       }
     })
   }
@@ -95,7 +105,7 @@ export abstract class ComicDefinition {
       return {
         name: this.name,
         linkUrl: this.linkUrl,
-        data: fixUrls(this.linkUrl, comicData),
+        data: fixup(this.linkUrl, comicData),
       }
     } catch (e: any) {
       return {
@@ -200,6 +210,6 @@ export function singleImageWithTitle(href: string | undefined, title: string | u
 // These functions are internal, and are only exported for unit testing
 export let exportedForTesting = {
   fixSrcSet: fixSrcSet,
-  fixUrls: fixUrls,
-  fixHtmlUrls: fixHtmlUrls
+  fixup: fixup,
+  fixupHtml: fixupHtml
 }
