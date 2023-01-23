@@ -23,7 +23,7 @@ export type ComicData = {
 function fixUrl(originUrl: string, url?: string): string | undefined {
   if (!url) return url
 
-  let parsedOrigin = new URL(originUrl)
+  const parsedOrigin = new URL(originUrl)
   if (url.startsWith('//')) {
     url = parsedOrigin.protocol + url
   }
@@ -100,7 +100,7 @@ export abstract class ComicDefinition {
 
   async getComic(): Promise<Comic> {
     try {
-      let comicData = await this.loadComicData()
+      const comicData = await this.loadComicData()
       validate(comicData)
       return {
         name: this.name,
@@ -160,7 +160,7 @@ export class LoadedUrlComic extends ComicDefinition {
     if (response.status != 200) {
       throw new Error(`Failed getting ${this.name}: 'HTTP ${response.status}`)
     }
-    let body = await response.text()
+    const body = await response.text()
 
     return this.comicFactory(body)
   }
@@ -189,7 +189,7 @@ export type ParseComicFactory = (body: CheerioAPI, bodyText: string) => ComicDat
 export class ParseComic extends LoadedUrlComic {
   constructor(name: string, url: string, comicFactory: ParseComicFactory) {
     super(name, url, (body) => {
-      let doc = load(body, {xmlMode: false, scriptingEnabled: false})
+      const doc = load(body, {xmlMode: false, scriptingEnabled: false})
       return comicFactory(doc, body)
     })
   }
@@ -208,7 +208,7 @@ export function singleImageWithTitle(href: string | undefined, title: string | u
 }
 
 // These functions are internal, and are only exported for unit testing
-export let exportedForTesting = {
+export const exportedForTesting = {
   fixSrcSet: fixSrcSet,
   fixup: fixup,
   fixupHtml: fixupHtml

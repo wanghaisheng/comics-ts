@@ -2,7 +2,7 @@ import { ComicDefinition, DirectUrlComic, ParseComic, singleImage, singleImageWi
 
 export var comicDefinitions: ComicDefinition[] = [
   new DirectUrlComic('Lunch', 'https://e24.no', () => {
-    var now = new Date().toISOString()
+    const now = new Date().toISOString()
     return 'https://api.e24.no/content/v1/comics/' + now.substring(0, 10)
   }),
   new ParseComic('XKCD', 'https://www.xkcd.com/', ($) => {
@@ -33,11 +33,11 @@ export var comicDefinitions: ComicDefinition[] = [
     }
   }),
   new ParseComic('MonkeyUser', 'https://www.monkeyuser.com/?dir=last', ($, body) => {
-    let img = $('.content img').attr('src');
+    const img = $('.content img').attr('src');
     if (img) {
       return singleImageWithTitle($('.content img').attr('src'),  $('.content img').attr('title'));
     } else {
-      let vidMatch = body.match(/videoId: *"([^"]*)"/)
+      const vidMatch = body.match(/videoId: *"([^"]*)"/)
       if (vidMatch) {
         return {
           media: [{type: 'youtube', id: vidMatch[1]}]
