@@ -57,5 +57,8 @@ export var comicDefinitions: ComicDefinition[] = [
   }),
   new ParseComic('War and Peas', 'https://warandpeas.com/', ($) => {
     return singleImage($('div.entry-content img').attr('src')); 
+  }),
+  new ParseComic('Poorly Drawn Lines', 'https://poorlydrawnlines.com/', ($) => {
+    return singleImage($('div.wp-block-image img').attr('src')); 
   })
 ]
