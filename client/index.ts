@@ -60,7 +60,13 @@ window.addEventListener('load', async function () {
                     p.innerText = media.content;
                     comicElement.appendChild(p);
                 }
-                
+
+                if (media.type == 'title') {
+                    let h = document.createElement('h3');
+                    h.innerText = media.content;
+                    comicElement.appendChild(h);
+                }
+
                 if (media.type == 'html') {
                     let p = document.createElement('p');
                     p.innerHTML = DOMPurify.sanitize(media.content);

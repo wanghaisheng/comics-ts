@@ -50,9 +50,12 @@ export var comicDefinitions: ComicDefinition[] = [
     return {
       media: [
         {type: 'image', href: $('div.main-image-container img').attr('src')},
-        {type: 'text', content: $('div.main-image-container img').attr('title')},
+        {type: 'title', content: $('div.main-image-container img').attr('title')},
         {type: 'html', content: $('div.comic-post article div.body').html() ?? undefined},
       ]
     }
+  }),
+  new ParseComic('War and Peas', 'https://warandpeas.com/', ($) => {
+    return singleImage($('div.entry-content img').attr('src')); 
   })
 ]
