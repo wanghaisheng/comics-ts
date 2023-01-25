@@ -1,4 +1,4 @@
-import { ComicDefinition, DirectUrlComic, ParseComic, singleImage, singleImageWithTitle } from './comic'
+import { ComicDefinition, DirectUrlComic, NavigateParseComic, ParseComic, singleImage, singleImageWithTitle } from './comic'
 
 export var comicDefinitions: ComicDefinition[] = [
   new DirectUrlComic('Lunch', 'https://e24.no', () => {
@@ -60,5 +60,12 @@ export var comicDefinitions: ComicDefinition[] = [
   }),
   new ParseComic('Poorly Drawn Lines', 'https://poorlydrawnlines.com/', ($) => {
     return singleImage($('div.wp-block-image img').attr('src')); 
-  })
+  }),
+  new NavigateParseComic('The Oatmeal', 'https://theoatmeal.com/comics',
+    ($) => { return $('div.comic-list a').attr('href')! },
+    ($) => {
+      return {
+        media: $('div.comics img, div.ht_comics_container img').map((_, el) => { return {'type': 'image', href: $(el).attr('src') } }).toArray()
+      }
+    })
 ]

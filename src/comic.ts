@@ -195,6 +195,31 @@ export class ParseComic extends LoadedUrlComic {
   }
 }
 
+export class NavigateParseComic extends ParseComic {
+  targetSelector: (body: CheerioAPI) => string;
+
+  constructor(name: string, url: string, targetSelector: (body: CheerioAPI) => string, comicFactory: ParseComicFactory) {
+    super(name, url, comicFactory);
+    this.targetSelector = targetSelector;
+  }
+
+  async loadComicData(): Promise<ComicData> {
+    const response = await this.fetchWithTimeout(this.linkUrl);
+
+    if (response.status != 200) {
+      throw new Error(`Failed getting ${this.name}: 'HTTP ${response.status}`)
+    }
+    const body = await response.text()
+    const doc = load(body, {xmlMode: false, scriptingEnabled: false});
+    const targetUrl = this.targetSelector(doc);
+
+    this.linkUrl = targetUrl;
+
+    return await super.loadComicData();
+  }
+}
+
+
 export function singleImage(href: string | undefined):  ComicData {
   return {
     media: [{type: 'image', href: href}]
