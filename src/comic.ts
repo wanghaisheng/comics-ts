@@ -216,7 +216,7 @@ export class NavigateParseComic extends ParseComic {
       throw new Error("Unable to find target URL");
     }
 
-    this.linkUrl = targetUrl;
+    this.linkUrl = fixUrl(this.linkUrl, targetUrl)!;
 
     return await super.loadComicData();
   }
