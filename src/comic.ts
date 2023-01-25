@@ -212,6 +212,9 @@ export class NavigateParseComic extends ParseComic {
     const body = await response.text()
     const doc = load(body, {xmlMode: false, scriptingEnabled: false});
     const targetUrl = this.targetSelector(doc);
+    if(!targetUrl) {
+      throw new Error("Unable to find target URL");
+    }
 
     this.linkUrl = targetUrl;
 

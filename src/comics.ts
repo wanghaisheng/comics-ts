@@ -62,7 +62,7 @@ export var comicDefinitions: ComicDefinition[] = [
     return singleImage($('div.wp-block-image img').attr('src')); 
   }),
   new NavigateParseComic('The Oatmeal', 'https://theoatmeal.com/comics',
-    ($) => { return $('div.comic-list a').attr('href')! },
+    ($) => { return $('div.comic_list > a').attr('href')! },
     ($) => {
       return {
         media: $('div.comics img, div.ht_comics_container img').map((_, el) => { return {'type': 'image', href: $(el).attr('src') } }).toArray()
