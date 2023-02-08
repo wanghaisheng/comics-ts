@@ -1,16 +1,11 @@
 name = "comics-ts"
-type = "javascript"
-zone_id = ""
-account_id = ""
-route = ""
 workers_dev = true
 routes = ['comics.wangpedersen.com/*']
+main = "dist/worker.js"
+compatibility_date = "2023-02-08"
 
 [site]
 bucket = "./dist/public"
-entry-point = "."
 
 [build]
 command = "npm install && npm run build"
-[build.upload]
-format = "service-worker"
