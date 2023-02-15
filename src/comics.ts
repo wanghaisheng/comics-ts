@@ -46,13 +46,15 @@ export var comicDefinitions: ComicDefinition[] = [
     }
     return {media: []};
   }),
-  new ParseComic('Loading Artist', 'https://loadingartist.com/comic/ready-or-naut/', ($) => {
-    return {
-      media: [
-        {type: 'image', href: $('div.main-image-container img').attr('src')},
-        {type: 'title', content: $('div.main-image-container img').attr('title')},
-        {type: 'html', content: $('div.comic-post article div.body').html() ?? undefined},
-      ]
+  new NavigateParseComic('Loading Artist', 'https://loadingartist.com/', 
+    ($) => { return $('a.comic-thumb.wide').attr('href')! },
+    ($) => {
+      return {
+        media: [
+          {type: 'image', href: $('div.main-image-container img').attr('src')},
+          {type: 'title', content: $('div.main-image-container img').attr('title')},
+          {type: 'html', content: $('div.comic-post article div.body').html() ?? undefined},
+        ]
     }
   }),
   new ParseComic('War and Peas', 'https://warandpeas.com/', ($) => {
