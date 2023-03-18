@@ -11,9 +11,6 @@ export var comicDefinitions: ComicDefinition[] = [
       $('#comic img').attr('title')
     );
   }),
-  new ParseComic('Dilbert (English)', 'https://dilbert.com/', ($) => {
-    return singleImage($('img.img-comic').attr('src'));
-  }),
   new ParseComic('Spinnerette', 'https://www.spinnyverse.com', ($) => {
     return singleImage($('img#cc-comic').attr('src'));
   }),
