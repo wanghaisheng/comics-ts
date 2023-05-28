@@ -66,5 +66,8 @@ export var comicDefinitions: ComicDefinition[] = [
       return {
         media: $('div.comics img, div.ht_comics_container img').map((_, el) => { return {'type': 'image', href: $(el).attr('src') } }).toArray()
       }
-    })
+    }),
+  new ParseComic('ToonHole', 'https://toonhole.com/', ($) => {
+    return singleImage($('img.wp-post-image').attr('src')); 
+  })
 ]
