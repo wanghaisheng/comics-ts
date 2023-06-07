@@ -72,5 +72,11 @@ export var comicDefinitions: ComicDefinition[] = [
   }),
   new ParseComic('Woork Chronicles', 'https://workchronicles.com/', ($) => {
     return singleImage($('figure.wp-block-image.size-full img').attr('src'));
+  }),
+  new ParseComic('Tales of Absurdity', 'https://talesofabsurdity.com/', ($) => {
+    return singleImage($('picture img').attr('src'));
+  }),
+  new ParseComic('Portugese Geese', 'https://portuguesegeese.com/', ($) => {
+    return singleImage($('figure.wp-block-image.size-full img').attr('src'));
   })
 ]
