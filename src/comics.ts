@@ -69,5 +69,8 @@ export var comicDefinitions: ComicDefinition[] = [
     }),
   new ParseComic('ToonHole', 'https://toonhole.com/', ($) => {
     return singleImage($('img.wp-post-image').attr('src')); 
+  }),
+  new ParseComic('Woork Chronicles', 'https://workchronicles.com/', ($) => {
+    return singleImage($('figure.wp-block-image.size-full img').attr('src'));
   })
 ]
