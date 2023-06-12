@@ -96,11 +96,11 @@ export abstract class ComicDefinition {
     this.linkUrl = linkUrl
   }
 
-  abstract loadComicData(): Promise<ComicData>
+  abstract loadComicData(linkUrl: string): Promise<ComicData>
 
   async getComic(): Promise<Comic> {
     try {
-      const comicData = await this.loadComicData()
+      const comicData = await this.loadComicData(this.linkUrl)
       validate(comicData)
       return {
         name: this.name,
@@ -120,7 +120,7 @@ export abstract class ComicDefinition {
   }
 }
 
-export type DirectUrlImageFactory = () => string
+export type DirectUrlImageFactory = (linkUrl: string) => string
 
 export class DirectUrlComic extends ComicDefinition {
   imgFactory: DirectUrlImageFactory
@@ -134,10 +134,10 @@ export class DirectUrlComic extends ComicDefinition {
     this.imgFactory = imgFactory
   }
 
-  loadComicData(): Promise<ComicData> {
+  loadComicData(linkUrl: string): Promise<ComicData> {
     return Promise.resolve({
       media: [{
-        href: this.imgFactory(),
+        href: this.imgFactory(linkUrl),
         type: 'image'
       }]
     })
@@ -154,8 +154,8 @@ export class LoadedUrlComic extends ComicDefinition {
     this.comicFactory = comicFactory
   }
 
-  async loadComicData(): Promise<ComicData> {
-    const response = await this.fetchWithTimeout(this.linkUrl)
+  async loadComicData(linkUrl: string): Promise<ComicData> {
+    const response = await this.fetchWithTimeout(linkUrl)
 
     if (response.status != 200) {
       throw new Error(`Failed getting ${this.name}: 'HTTP ${response.status}`)
@@ -203,8 +203,8 @@ export class NavigateParseComic extends ParseComic {
     this.targetSelector = targetSelector;
   }
 
-  async loadComicData(): Promise<ComicData> {
-    const response = await this.fetchWithTimeout(this.linkUrl);
+  async loadComicData(linkUrl: string): Promise<ComicData> {
+    const response = await this.fetchWithTimeout(linkUrl);
 
     if (response.status != 200) {
       throw new Error(`Failed getting ${this.name}: 'HTTP ${response.status}`)
@@ -213,12 +213,12 @@ export class NavigateParseComic extends ParseComic {
     const doc = load(body, {xmlMode: false, scriptingEnabled: false});
     const targetUrl = this.targetSelector(doc);
     if(!targetUrl) {
-      throw new Error("Unable to find target URL");
+      throw new Error("Unable to find target URL; url=" + this.linkUrl + " src=" + body);
     }
 
-    this.linkUrl = fixUrl(this.linkUrl, targetUrl)!;
+    const navigatedUrl = fixUrl(linkUrl, targetUrl)!;
 
-    return await super.loadComicData();
+    return await super.loadComicData(navigatedUrl);
   }
 }
 

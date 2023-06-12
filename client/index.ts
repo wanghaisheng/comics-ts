@@ -25,12 +25,16 @@ window.addEventListener('load', async function () {
     try {
         setVersion()
 
-        let comicsResponse = await fetch('/comics')
-        hideLoad()
+        let comicsResponse= await fetch('/comics')
         if (comicsResponse.status != 200) {
             throw new Error(`HTTP ${comicsResponse.status}`)
         }
-        let comics: Array<Comic> = await comicsResponse.json()
+
+        let comicsList = await comicsResponse.json()
+        let comics: Array<Comic> = await Promise.all(
+            comicsList.map(async (comicName: string) => 
+                (await fetch('/comics/' + encodeURIComponent(comicName))).json()))
+        hideLoad()
         updateLocalComicsTimestamp(comics)
         comics.sort((a, b) => b.firstSeen - a.firstSeen)
         comics.forEach((comic) => {

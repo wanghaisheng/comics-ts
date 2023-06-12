@@ -1,7 +1,7 @@
 import { ComicDefinition, DirectUrlComic, NavigateParseComic, ParseComic, singleImage, singleImageWithTitle } from './comic'
 
 export var comicDefinitions: ComicDefinition[] = [
-  new DirectUrlComic('Lunch', 'https://e24.no', () => {
+  new DirectUrlComic('Lunch', 'https://e24.no', (_) => {
     const now = new Date().toISOString()
     return 'https://api.e24.no/content/v1/comics/' + now.substring(0, 10)
   }),
@@ -72,11 +72,11 @@ export var comicDefinitions: ComicDefinition[] = [
   }),
   new ParseComic('Woork Chronicles', 'https://workchronicles.com/', ($) => {
     return singleImage($('figure.wp-block-image.size-full img').attr('src'));
-  })/*,
+  }),
   new ParseComic('Tales of Absurdity', 'https://talesofabsurdity.com/', ($) => {
-    return singleImage($('picture img').attr('src'));
+    return singleImage($('div#unspliced-comic img.size-full').attr('src'));
   }),
   new ParseComic('Portugese Geese', 'https://portuguesegeese.com/', ($) => {
     return singleImage($('figure.wp-block-image.size-full img').attr('src'));
-  })*/
+  })
 ]
