@@ -71,8 +71,5 @@ export var comicDefinitions: ComicDefinition[] = [
     }),
   new ParseComic('Tales of Absurdity', 'https://talesofabsurdity.com/', ($) => {
     return singleImage($('div#unspliced-comic img.size-full').attr('src'));
-  }),
-  new ParseComic('Portugese Geese', 'https://portuguesegeese.com/', ($) => {
-    return singleImage($('figure.wp-block-image.size-full img').attr('src'));
   })
 ]
