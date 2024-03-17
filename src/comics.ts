@@ -60,13 +60,6 @@ export var comicDefinitions: ComicDefinition[] = [
   new ParseComic('Poorly Drawn Lines', 'https://poorlydrawnlines.com/', ($) => {
     return singleImage($('div.wp-block-image img').attr('src')); 
   }),
-  new NavigateParseComic('The Oatmeal', 'https://theoatmeal.com/comics',
-    ($) => { return $('div.comics_list > a').attr('href')! },
-    ($) => {
-      return {
-        media: $('div.comics img, div.ht_comics_container img').map((_, el) => { return {'type': 'image', href: $(el).attr('src') } }).toArray()
-      }
-    }),
   new ParseComic('ToonHole', 'https://toonhole.com/', ($) => {
     return singleImage($('img.wp-post-image').attr('src')); 
   }),
