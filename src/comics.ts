@@ -62,9 +62,13 @@ export var comicDefinitions: ComicDefinition[] = [
   new ParseComic('ToonHole', 'https://toonhole.com/', ($) => {
     return singleImage($('img.wp-post-image').attr('src')); 
   }),
-  new ParseComic('Work Chronicles', 'https://workchronicles.com/', ($) => {
-    return singleImage($('figure.size-full img').attr('src'));
-  }),
+  new NavigateParseComic('Work Chronicles', 'https://workchronicles.substack.com/archive', 
+    ($) => {
+      return $('a.pencraft').attr('href') ?? "https://example.com/";
+    },
+    ($) => {
+      return singleImage($('picture img').attr('src')?.replace("w_120,", "w_800,"));
+    }),
   new ParseComic('Tales of Absurdity', 'https://talesofabsurdity.com/', ($) => {
     return singleImage($('div#unspliced-comic img.size-full').attr('src'));
   }),
