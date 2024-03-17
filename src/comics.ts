@@ -49,8 +49,7 @@ export var comicDefinitions: ComicDefinition[] = [
       return {
         media: [
           {type: 'image', href: $('div.main-image-container img').attr('src')},
-          {type: 'title', content: $('div.main-image-container img').attr('title')},
-          {type: 'html', content: $('div.comic-post article div.body').html() ?? undefined},
+          {type: 'title', content: $('div.main-image-container img').attr('title')}
         ]
     }
   }),
