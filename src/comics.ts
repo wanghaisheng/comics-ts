@@ -68,8 +68,5 @@ export var comicDefinitions: ComicDefinition[] = [
     },
     ($) => {
       return singleImage($('picture img').attr('src')?.replace("w_120,", "w_800,"));
-    }),
-  new ParseComic('Tales of Absurdity', 'https://talesofabsurdity.com/', ($) => {
-    return singleImage($('div#unspliced-comic img.size-full').attr('src'));
-  })
+    })
 ]
